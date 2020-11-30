@@ -17,7 +17,9 @@ type HanabiContext struct {
 	Username  string
 }
 
-const HanabiContextKey HanabiContextKeyType = 0
+const (
+	HanabiContextKey HanabiContextKeyType = 0
+)
 
 var (
 	// The counter is atomically incremented before assignment,

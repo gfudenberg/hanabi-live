@@ -186,6 +186,10 @@ func main() {
 	// Initialize the list that contains every word in the dictionary
 	wordListInit()
 
+	// Start the managers
+	go sessionsManagerInit()
+	go tablesManagerInit()
+
 	// Start the Discord bot (in "discord.go")
 	discordInit()
 

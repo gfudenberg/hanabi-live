@@ -96,6 +96,14 @@ func httpWS(c *gin.Context) {
 		return
 	}
 
+	websocketNew(c, userID, username)
+}
+
+func websocketNew(c *gin.Context, userID int, username string) {
+	// Local variables
+	r := c.Request
+	w := c.Writer
+
 	// Establish the WebSocket connection using the Melody framework
 	// We need to attach some metadata to the Melody session
 	keys := make(map[string]interface{})
