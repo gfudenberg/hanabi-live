@@ -1,13 +1,16 @@
-package main
+package sessions
 
-type SessionsManager struct {
+type Manager struct {
 }
 
+func NewManager
+
+
 var (
-	sessionsRequests chan *SessionsRequest
+	sessionsRequests chan *Request
 )
 
-type SessionsRequest struct {
+type Request struct {
 	Type    int
 	Confirm chan bool
 }
@@ -17,7 +20,7 @@ const (
 	SessionsRequestTypeBar
 )
 
-func sessionsManagerInit() {
+func (m *Manager) AddSession() {
 	for {
 		request := <-sessionsRequests
 		if request.Type == SessionsRequestTypeFoo {
