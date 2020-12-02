@@ -187,8 +187,8 @@ func main() {
 	wordListInit()
 
 	// Start the managers
-	go sessionsManagerInit()
-	go tablesManagerInit()
+	// go sessionsManagerInit()
+	// go tablesManagerInit()
 
 	// Start the Discord bot (in "discord.go")
 	discordInit()

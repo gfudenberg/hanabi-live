@@ -1,15 +1,16 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"net"
 	"net/http"
 	"strconv"
-	"sync/atomic"
 
 	gsessions "github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4"
+	"nhooyr.io/websocket"
 )
 
 // httpWS handles part 2 of 2 for logic authentication
@@ -104,6 +105,36 @@ func websocketNew(c *gin.Context, userID int, username string) {
 	r := c.Request
 	w := c.Writer
 
+	var conn *websocket.Conn
+	if v, err := websocket.Accept(w, r, nil); err != nil {
+		msg := "Failed to establish the WebSocket connection for user \"" + username + "\":"
+		httpWSError(c, msg, err)
+		return
+	} else {
+		conn = v
+	}
+	defer conn.Close(websocket.StatusInternalError, "")
+
+	err = cs.subscribe(r.Context(), conn)
+	if errors.Is(err, context.Canceled) {
+		return
+	}
+	if websocket.CloseStatus(err) == websocket.StatusNormalClosure ||
+		websocket.CloseStatus(err) == websocket.StatusGoingAway {
+		return
+	}
+	if err != nil {
+		cs.logf("%v", err)
+		return
+	}
+}
+
+/*
+func websocketNew(c *gin.Context, userID int, username string) {
+	// Local variables
+	r := c.Request
+	w := c.Writer
+
 	// Establish the WebSocket connection using the Melody framework
 	// We need to attach some metadata to the Melody session
 	keys := make(map[string]interface{})
@@ -134,6 +165,7 @@ func websocketNew(c *gin.Context, userID int, username string) {
 
 	// This line will not be reached until the WebSocket connection is closed and/or terminated
 }
+*/
 
 func httpWSError(c *gin.Context, msg string, err error) {
 	// Local variables

@@ -1,10 +1,15 @@
 package sessions
 
-type Manager struct {
+type manager struct {
 }
 
-func NewManager
+func NewManager() *manager {
+	return &manager{}
+}
 
+type session struct {
+	msgs chan []byte
+}
 
 var (
 	sessionsRequests chan *Request
